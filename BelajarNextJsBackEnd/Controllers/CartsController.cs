@@ -6,9 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BelajarNextJsBackEnd.Entities;
-using BelajarNextJsBackEnd.Models;
-using Microsoft.AspNetCore.Authorization;
-using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace BelajarNextJsBackEnd.Controllers
 {
@@ -27,10 +24,10 @@ namespace BelajarNextJsBackEnd.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Cart>>> GetCarts()
         {
-            if (_context.Carts == null)
-            {
-                return NotFound();
-            }
+          if (_context.Carts == null)
+          {
+              return NotFound();
+          }
             return await _context.Carts.ToListAsync();
         }
 
@@ -38,10 +35,10 @@ namespace BelajarNextJsBackEnd.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Cart>> GetCart(string id)
         {
-            if (_context.Carts == null)
-            {
-                return NotFound();
-            }
+          if (_context.Carts == null)
+          {
+              return NotFound();
+          }
             var cart = await _context.Carts.FindAsync(id);
 
             if (cart == null)
@@ -83,43 +80,33 @@ namespace BelajarNextJsBackEnd.Controllers
             return NoContent();
         }
 
-        [HttpPost(Name = "AddToCart")]
-        [Authorize("api")]
-        public async Task<ActionResult<bool>> Post(AddToCartModel model)
+        // POST: api/Carts
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Cart>> PostCart(Cart cart)
         {
-            if (_context.Carts == null)
+          if (_context.Carts == null)
+          {
+              return Problem("Entity set 'ApplicationDbContext.Carts'  is null.");
+          }
+            _context.Carts.Add(cart);
+            try
             {
-                return Problem("Entity set 'ApplicationDbContext.Carts'  is null.");
+                await _context.SaveChangesAsync();
             }
-
-            // jangan lupa validasi productnya ada di model...
-
-            var userId = User.FindFirst(Claims.Subject)?.Value ?? throw new InvalidOperationException("User ID not found");
-
-            var existing = await _context.Carts
-                .Where(Q => Q.ProductId == model.ProductId && Q.AccountId == userId)
-                .FirstOrDefaultAsync();
-
-            // jangan lupa validasi qty jangan sampe over buy
-
-            if (existing != null)
+            catch (DbUpdateException)
             {
-                existing.Quantity += model.Qty;
-            }
-            else
-            {
-                _context.Carts.Add(new Cart
+                if (CartExists(cart.Id))
                 {
-                    AccountId = userId,
-                    CreatedAt = DateTimeOffset.UtcNow,
-                    ProductId = model.ProductId,
-                    Quantity = model.Qty,
-                    Id = Ulid.NewUlid().ToString()
-                });
+                    return Conflict();
+                }
+                else
+                {
+                    throw;
+                }
             }
 
-            await _context.SaveChangesAsync();
-            return true;
+            return CreatedAtAction("GetCart", new { id = cart.Id }, cart);
         }
 
         // DELETE: api/Carts/5

@@ -6,63 +6,64 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BelajarNextJsBackEnd.Entities;
+using System.Drawing.Drawing2D;
 using BelajarNextJsBackEnd.Models;
 
 namespace BelajarNextJsBackEnd.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BrandsController : ControllerBase
+    public class RestaurantsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public BrandsController(ApplicationDbContext context)
+        public RestaurantsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Brands
+        // GET: api/Restaurants
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Brand>>> GetBrands()
+        public async Task<ActionResult<IEnumerable<Restaurant>>> GetRestaurants()
         {
-          if (_context.Brands == null)
+          if (_context.Restaurants == null)
           {
               return NotFound();
           }
-            return await _context.Brands.ToListAsync();
+            return await _context.Restaurants.ToListAsync();
         }
 
-        // GET: api/Brands/5
+        // GET: api/Restaurants/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Brand>> GetBrand(string id)
+        public async Task<ActionResult<Restaurant>> GetRestaurant(string id)
         {
-          if (_context.Brands == null)
+          if (_context.Restaurants == null)
           {
               return NotFound();
           }
-            var brand = await _context.Brands.FindAsync(id);
+            var restaurant = await _context.Restaurants.FindAsync(id);
 
-            if (brand == null)
+            if (restaurant == null)
             {
                 return NotFound();
             }
 
-            return brand;
+            return restaurant;
         }
 
-        // PUT: api/Brands/5
+        // PUT: api/Restaurants/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("{id}", Name = "UpdateBrand")]
-        public async Task<IActionResult> PutBrand(string id, BrandUpdateModel brand)
+        [HttpPost("{id}", Name = "UpdateRestaurant")]
+        public async Task<IActionResult> PutRestaurant(string id, RestaurantUpdateModel restaurant)
         {
-            var update = await _context.Brands.Where(Q => Q.Id == id).FirstOrDefaultAsync();
+            var update = await _context.Restaurants.Where(Q => Q.Id == id).FirstOrDefaultAsync();
             if (update == null)
             {
                 return NotFound();
             }
 
             // ada validasi namenya
-            update.Name = brand.Name;
+            update.Name = restaurant.Name;
 
             try
             {
@@ -70,7 +71,7 @@ namespace BelajarNextJsBackEnd.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!BrandExists(id))
+                if (!RestaurantExists(id))
                 {
                     return NotFound();
                 }
@@ -83,30 +84,29 @@ namespace BelajarNextJsBackEnd.Controllers
             return NoContent();
         }
 
-        // POST: api/Brands
+        // POST: api/Restaurants
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost(Name ="CreateBrand")]
-        public async Task<ActionResult<Brand>> PostBrand(BrandCreateModel brand)
+        [HttpPost(Name = "CreateRestaurant")]
+        public async Task<ActionResult<Restaurant>> PostRestaurant(RestaurantCreateModel restaurant)
         {
-          if (_context.Brands == null)
-          {
-              return Problem("Entity set 'ApplicationDbContext.Brands'  is null.");
-          }
+            if (_context.Restaurants == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Brands'  is null.");
+            }
 
-            var insert = new Brand
+            var insert = new Restaurant
             {
                 Id = Ulid.NewUlid().ToString(),
-                Name = brand.Name,
-                CreatedAt = DateTimeOffset.UtcNow,
+                Name = restaurant.Name,
             };
-            _context.Brands.Add(insert);
+            _context.Restaurants.Add(insert);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (BrandExists(insert.Id))
+                if (RestaurantExists(insert.Id))
                 {
                     return Conflict();
                 }
@@ -119,29 +119,29 @@ namespace BelajarNextJsBackEnd.Controllers
             return insert;
         }
 
-        // DELETE: api/Brands/5
-        [HttpDelete("{id}", Name = "DeleteBrand")]
-        public async Task<IActionResult> DeleteBrand(string id)
+        // DELETE: api/Restaurants/5
+        [HttpDelete("{id}", Name = "DeleteRestaurant")]
+        public async Task<IActionResult> DeleteRestaurant(string id)
         {
-            if (_context.Brands == null)
+            if (_context.Restaurants == null)
             {
                 return NotFound();
             }
-            var brand = await _context.Brands.FindAsync(id);
-            if (brand == null)
+            var restaurant = await _context.Restaurants.FindAsync(id);
+            if (restaurant == null)
             {
                 return NotFound();
             }
 
-            _context.Brands.Remove(brand);
+            _context.Restaurants.Remove(restaurant);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool BrandExists(string id)
+        private bool RestaurantExists(string id)
         {
-            return (_context.Brands?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Restaurants?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

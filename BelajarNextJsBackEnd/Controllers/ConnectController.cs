@@ -86,8 +86,8 @@ namespace BelajarNextJsBackEnd.Controllers
 
             // Retrieve the profile of the logged in user.
             var userId = result.Principal.FindFirstValue(Claims.Subject);
-            var user = await _db.Accounts.AsNoTracking().Where(Q => Q.Id == userId).FirstOrDefaultAsync(cancellationToken: cancellationToken);
-            
+            var user = await _db.Users.AsNoTracking().Where(Q => Q.Id == userId).FirstOrDefaultAsync(cancellationToken: cancellationToken);
+
             if (user == null)
             {
                 throw new InvalidOperationException("The user details cannot be retrieved.");
@@ -149,7 +149,7 @@ namespace BelajarNextJsBackEnd.Controllers
 
                 // Retrieve the user profile corresponding to the authorization code/refresh token.
                 var userId = principal.GetClaim(Claims.Subject);
-                var user = await _db.Accounts.AsNoTracking().Where(Q => Q.Id == userId).FirstOrDefaultAsync(cancellationToken: cancellationToken);
+                var user = await _db.Users.AsNoTracking().Where(Q => Q.Id == userId).FirstOrDefaultAsync(cancellationToken: cancellationToken);
                 if (user is null)
                 {
                     return Forbid(
@@ -309,7 +309,7 @@ namespace BelajarNextJsBackEnd.Controllers
         public async Task<IActionResult> UserInfo(CancellationToken cancellationToken)
         {
             var userId = User.GetClaim(Claims.Subject);
-            var user = await _db.Accounts.AsNoTracking().Where(Q => Q.Id == userId).FirstOrDefaultAsync(cancellationToken: cancellationToken);
+            var user = await _db.Users.AsNoTracking().Where(Q => Q.Id == userId).FirstOrDefaultAsync(cancellationToken: cancellationToken);
 
             if (user == null)
             {

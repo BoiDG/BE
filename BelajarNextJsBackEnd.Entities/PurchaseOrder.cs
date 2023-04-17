@@ -1,16 +1,19 @@
-﻿namespace BelajarNextJsBackEnd.Entities
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Principal;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BelajarNextJsBackEnd.Entities
 {
     public class PurchaseOrder
     {
         public string Id { set; get; } = "";
 
-        public string AccountId { set; get; } = "";
+        public string UserId { set; get; } = "";
 
-        public Account Account { set; get; } = null!;
-
-        public string ShippingInformationId { set; get; } = "";
-
-        public ShippingInformation ShippingInformation { set; get; } = null!;
+        public User User { set; get; } = null!;
 
         public string PurchaseOrderStatusId { set; get; } = "";
 
@@ -18,6 +21,5 @@
 
         public List<PurchaseOrderDetail> PurchaseOrderDetails { set; get; } = new List<PurchaseOrderDetail>();
 
-        public DateTimeOffset CreatedAt { set; get; }
     }
 }

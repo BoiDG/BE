@@ -1,6 +1,12 @@
-﻿namespace BelajarNextJsBackEnd.Entities
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BelajarNextJsBackEnd.Entities
 {
-    public class Account
+    public class User
     {
         public string Id { set; get; } = "";
 
@@ -10,12 +16,7 @@
 
         public string Password { set; get; } = "";
 
-        public List<Cart> Carts { get; set; } = new List<Cart>();
-
-        public List<ShippingInformation> ShippingInformations { set; get; } = new List<ShippingInformation>();
-
         public List<PurchaseOrder> PurchaseOrders { set; get; } = new List<PurchaseOrder>();
 
-        public DateTimeOffset CreatedAt { set; get; }
     }
 }

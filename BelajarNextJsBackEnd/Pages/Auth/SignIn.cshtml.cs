@@ -42,7 +42,7 @@ namespace BelajarNextJsBackEnd.Pages.Auth
                 return Page();
             }
 
-            var user = await _db.Accounts.AsNoTracking()
+            var user = await _db.Users.AsNoTracking()
                 .Where(Q => Q.Email == Form.Email)
                 .FirstOrDefaultAsync(cancellationToken);
 

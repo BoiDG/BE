@@ -15,64 +15,48 @@ namespace BelajarNextJsBackEnd.Entities
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PurchaseOrder>()
-                .HasOne(x => x.Account)
+                .HasOne(x => x.User)
                 .WithMany(x => x.PurchaseOrders)
-                .HasForeignKey(x => x.AccountId)
+                .HasForeignKey(x => x.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             var status1 = new PurchaseOrderStatus
             {
                 Id = "Dipesan",
-                CreatedAt = DateTimeOffset.Parse("2023-04-11T04:25:46Z"),
             };
             var status2 = new PurchaseOrderStatus
             {
                 Id = "Dibayar",
-                CreatedAt = DateTimeOffset.Parse("2023-04-11T04:25:46Z"),
             };
             var status3 = new PurchaseOrderStatus
             {
                 Id = "Dikonfirmasi",
-                CreatedAt = DateTimeOffset.Parse("2023-04-11T04:25:46Z"),
             };
             var status4 = new PurchaseOrderStatus
             {
                 Id = "Dikirim",
-                CreatedAt = DateTimeOffset.Parse("2023-04-11T04:25:46Z"),
             };
             var status5 = new PurchaseOrderStatus
             {
                 Id = "Selesai",
-                CreatedAt = DateTimeOffset.Parse("2023-04-11T04:25:46Z"),
             };
             var status6 = new PurchaseOrderStatus
             {
                 Id = "Dikomplain",
-                CreatedAt = DateTimeOffset.Parse("2023-04-11T04:25:46Z"),
             };
 
             modelBuilder.Entity<PurchaseOrderStatus>().HasData(status1, status2, status3, status4, status5, status6);
         }
 
-        public DbSet<Account> Accounts => Set<Account>();
+        public DbSet<User> Users => Set<User>();
 
-        public DbSet<Brand> Brands => Set<Brand>();
+        public DbSet<Restaurant> Restaurants => Set<Restaurant>();
 
         public DbSet<Cart> Carts => Set<Cart>();
 
-        public DbSet<City> Cities => Set<City>();
+        public DbSet<FoodItem> FoodItems => Set<FoodItem>();
 
-        public DbSet<Product> Products => Set<Product>();
-
-        public DbSet<Province> Provinces => Set<Province>();
-
-        public DbSet<PurchaseOrder> PurchaseOrders => Set<PurchaseOrder>();
-
-        public DbSet<PurchaseOrderDetail> PurchaseOrderDetails => Set<PurchaseOrderDetail>();
-
-        public DbSet<PurchaseOrderStatus> PurchaseOrderStatuses => Set<PurchaseOrderStatus>();
-
-        public DbSet<ShippingInformation> ShippingInformations => Set<ShippingInformation>();
+        public DbSet<CartDetail> CartDetails => Set<CartDetail>();
 
         public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
     }

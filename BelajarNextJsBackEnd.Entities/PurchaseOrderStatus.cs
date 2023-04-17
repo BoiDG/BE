@@ -13,6 +13,5 @@
 
         public List<PurchaseOrder> PurchaseOrders { set; get; } = new List<PurchaseOrder>();
 
-        public DateTimeOffset CreatedAt { set; get; }
     }
 }

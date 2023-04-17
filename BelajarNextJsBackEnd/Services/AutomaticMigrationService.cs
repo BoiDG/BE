@@ -1,6 +1,7 @@
 ﻿using BelajarNextJsBackEnd.Entities;
 using Microsoft.EntityFrameworkCore;
 using OpenIddict.Abstractions;
+using System.Security.Principal;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace BelajarNextJsBackEnd.Services
@@ -34,20 +35,20 @@ namespace BelajarNextJsBackEnd.Services
         private async Task AddAdministrator(CancellationToken cancellationToken)
         {
             var id = "01GXZBZDT9CZRHQF2QCCFBH40N";
-            var exist = await _db.Accounts.Where(Q => Q.Id == id).AnyAsync(cancellationToken);
+            var exist = await _db.Users.Where(Q => Q.Id == id).AnyAsync(cancellationToken);
             if (exist)
             {
                 return;
             }
 
-            var account = new Account
+            var account = new User
             {
                 Id = id,
                 Name = "Administrator",
                 Email = "admin@belajar.com",
                 Password = BCrypt.Net.BCrypt.HashPassword("password"),
             };
-            _db.Accounts.Add(account);
+            _db.Users.Add(account);
             await _db.SaveChangesAsync(cancellationToken);
         }
 

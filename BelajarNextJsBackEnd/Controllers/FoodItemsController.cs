@@ -12,74 +12,72 @@ namespace BelajarNextJsBackEnd.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CitiesController : ControllerBase
+    public class FoodItemsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public CitiesController(ApplicationDbContext context)
+        public FoodItemsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Cities
+        // GET: api/FoodItems
         [HttpGet]
-        public async Task<ActionResult<List<CityDataGridItem>>> GetCities()
+        public async Task<ActionResult<List<FoodItemDataGridItem>>> GetFoodItems()
         {
-            if (_context.Cities == null)
+            if (_context.FoodItems == null)
             {
                 return NotFound();
             }
-            return await _context.Cities.AsNoTracking().Select(Q => new CityDataGridItem
+            return await _context.FoodItems.AsNoTracking().Select(Q => new FoodItemDataGridItem
             {
                 Id = Q.Id,
                 Name = Q.Name,
-                ProvinceName = Q.Province.Name,
-                CreatedAt = Q.CreatedAt,
+                Price = Q.Price,
+                RestaurantName = Q.Restaurant.Name,
             }).ToListAsync();
         }
 
-        // GET: api/Cities/5
-        [HttpGet("{id}", Name = "GetCityDetail")]
-        public async Task<ActionResult<CityDetailModel>> GetCity(string id)
+        // GET: api/FoodItems/5
+        [HttpGet("{id}", Name = "GetFoodItemDetail")]
+        public async Task<ActionResult<FoodItemDetailModel>> GetFoodItem(string id)
         {
-            if (_context.Cities == null)
+            if (_context.FoodItems == null)
             {
                 return NotFound();
             }
-
-            var city = await _context.Cities
+            var foodItem = await _context.FoodItems
                 .AsNoTracking()
                 .Where(Q => Q.Id == id)
-                .Select(Q => new CityDetailModel
+                .Select(Q => new FoodItemDetailModel
                 {
                     Id = Q.Id,
                     Name = Q.Name,
-                    ProvinceId = Q.ProvinceId,
-                    ProvinceName = Q.Province.Name,
+                    Price = Q.Price,
+                    RestaurantId = Q.RestaurantId,
+                    RestaurantName = Q.Restaurant.Name,
                 })
                 .FirstOrDefaultAsync();
 
-            if (city == null)
+            if (foodItem == null)
             {
                 return NotFound();
             }
 
-            return city;
+            return foodItem;
         }
 
-        // PUT: api/Cities/5
+        // PUT: api/FoodItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("{id}", Name = "UpdateCity")]
-        public async Task<IActionResult> Post(string id, CityUpdateModel city)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutFoodItem(string id, FoodItem foodItem)
         {
-            var update = await _context.Cities.Where(Q => Q.Id == id).FirstOrDefaultAsync();
-            if (update == null)
+            if (id != foodItem.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            update.Name = city.Name;
-            update.ProvinceId = city.ProvinceId;
+            _context.Entry(foodItem).State = EntityState.Modified;
 
             try
             {
@@ -87,7 +85,7 @@ namespace BelajarNextJsBackEnd.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CityExists(id))
+                if (!FoodItemExists(id))
                 {
                     return NotFound();
                 }
@@ -100,35 +98,32 @@ namespace BelajarNextJsBackEnd.Controllers
             return NoContent();
         }
 
-        // POST: api/Cities
+        // POST: api/FoodItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost(Name = "CreateCity")]
-        public async Task<ActionResult<City>> Post(CityCreateModel city)
+        [HttpPost(Name = "CreateFoodItem")]
+        public async Task<ActionResult<FoodItem>> PostFoodItem(FoodItemCreateModel foodItem)
         {
-            if (_context.Cities == null)
+            if (_context.FoodItems == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Cities'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.FoodItems'  is null.");
             }
 
-            // harus ada validasinya...
-
-            var insert = new City
+            var insert = new FoodItem
             {
                 Id = Ulid.NewUlid().ToString(),
-                Name = city.Name,
-                ProvinceId = city.ProvinceId,
-                CreatedAt = DateTimeOffset.UtcNow,
+                Name = foodItem.Name,
+                Price = foodItem.Price,
+                RestaurantId = foodItem.RestaurantId,
+
             };
-
-            _context.Cities.Add(insert);
-
+            _context.FoodItems.Add(insert);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (CityExists(insert.Id))
+                if (FoodItemExists(insert.Id))
                 {
                     return Conflict();
                 }
@@ -141,29 +136,29 @@ namespace BelajarNextJsBackEnd.Controllers
             return insert;
         }
 
-        // DELETE: api/Cities/5
-        [HttpDelete("{id}", Name = "DeleteCity")]
-        public async Task<IActionResult> DeleteCity(string id)
+        // DELETE: api/FoodItems/5
+        [HttpDelete("{id}", Name = "DeleteFoodItem")]
+        public async Task<IActionResult> DeleteFoodItem(string id)
         {
-            if (_context.Cities == null)
+            if (_context.FoodItems == null)
             {
                 return NotFound();
             }
-            var city = await _context.Cities.FindAsync(id);
-            if (city == null)
+            var foodItem = await _context.FoodItems.FindAsync(id);
+            if (foodItem == null)
             {
                 return NotFound();
             }
 
-            _context.Cities.Remove(city);
+            _context.FoodItems.Remove(foodItem);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool CityExists(string id)
+        private bool FoodItemExists(string id)
         {
-            return (_context.Cities?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.FoodItems?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

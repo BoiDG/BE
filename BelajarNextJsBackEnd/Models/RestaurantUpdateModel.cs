@@ -1,7 +1,8 @@
 ﻿namespace BelajarNextJsBackEnd.Models
 {
-    public class BrandUpdateModel
+    public class RestaurantUpdateModel
     {
         public string Name { get; set; } = "";
+
     }
 }

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BelajarNextJsBackEnd.Entities.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230414034032_OpenIddict")]
+    [Migration("20230417093830_OpenIddict")]
     partial class OpenIddict
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,12 +19,176 @@ namespace BelajarNextJsBackEnd.Entities.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.16");
 
-            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.Account", b =>
+            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.Cart", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("CreatedAt")
+                    b.Property<string>("RestaurantId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RestaurantId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Carts");
+                });
+
+            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.CartDetail", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CartId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FoodItemId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CartId");
+
+                    b.HasIndex("FoodItemId");
+
+                    b.ToTable("CartDetails");
+                });
+
+            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.FoodItem", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RestaurantId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RestaurantId");
+
+                    b.ToTable("FoodItems");
+                });
+
+            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.PurchaseOrder", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PurchaseOrderStatusId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PurchaseOrderStatusId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PurchaseOrder");
+                });
+
+            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.PurchaseOrderDetail", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FoodItemId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PurchaseOrderId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FoodItemId");
+
+                    b.HasIndex("PurchaseOrderId");
+
+                    b.ToTable("PurchaseOrderDetail");
+                });
+
+            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.PurchaseOrderStatus", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PurchaseOrderStatus");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "Dipesan"
+                        },
+                        new
+                        {
+                            Id = "Dibayar"
+                        },
+                        new
+                        {
+                            Id = "Dikonfirmasi"
+                        },
+                        new
+                        {
+                            Id = "Dikirim"
+                        },
+                        new
+                        {
+                            Id = "Selesai"
+                        },
+                        new
+                        {
+                            Id = "Dikomplain"
+                        });
+                });
+
+            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.Restaurant", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Restaurants");
+                });
+
+            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.User", b =>
+                {
+                    b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
@@ -41,266 +205,24 @@ namespace BelajarNextJsBackEnd.Entities.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Accounts");
+                    b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.Brand", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Brands");
-                });
-
-            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.Cart", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("AccountId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ProductId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Quantity")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("Carts");
-                });
-
-            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.City", b =>
-                {
-                    b.Property<string>("Id")
+                    b.Property<string>("FriendlyName")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ProvinceId")
-                        .IsRequired()
+                    b.Property<string>("Xml")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProvinceId");
-
-                    b.ToTable("Cities");
-                });
-
-            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.Product", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("BrandId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BrandId");
-
-                    b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.Province", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Provinces");
-                });
-
-            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.PurchaseOrder", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("AccountId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PurchaseOrderStatusId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ShippingInformationId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
-
-                    b.HasIndex("PurchaseOrderStatusId");
-
-                    b.HasIndex("ShippingInformationId");
-
-                    b.ToTable("PurchaseOrders");
-                });
-
-            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.PurchaseOrderDetail", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ProductId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PurchaseOrderId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("PurchaseOrderId");
-
-                    b.ToTable("PurchaseOrderDetails");
-                });
-
-            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.PurchaseOrderStatus", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PurchaseOrderStatuses");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "Dipesan",
-                            CreatedAt = new DateTimeOffset(new DateTime(2023, 4, 11, 4, 25, 46, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
-                        },
-                        new
-                        {
-                            Id = "Dibayar",
-                            CreatedAt = new DateTimeOffset(new DateTime(2023, 4, 11, 4, 25, 46, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
-                        },
-                        new
-                        {
-                            Id = "Dikonfirmasi",
-                            CreatedAt = new DateTimeOffset(new DateTime(2023, 4, 11, 4, 25, 46, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
-                        },
-                        new
-                        {
-                            Id = "Dikirim",
-                            CreatedAt = new DateTimeOffset(new DateTime(2023, 4, 11, 4, 25, 46, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
-                        },
-                        new
-                        {
-                            Id = "Selesai",
-                            CreatedAt = new DateTimeOffset(new DateTime(2023, 4, 11, 4, 25, 46, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
-                        },
-                        new
-                        {
-                            Id = "Dikomplain",
-                            CreatedAt = new DateTimeOffset(new DateTime(2023, 4, 11, 4, 25, 46, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0))
-                        });
-                });
-
-            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.ShippingInformation", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("AccountId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CityId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
-
-                    b.HasIndex("CityId");
-
-                    b.ToTable("ShippingInformations");
+                    b.ToTable("DataProtectionKeys");
                 });
 
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictEntityFrameworkCoreApplication", b =>
@@ -503,77 +425,77 @@ namespace BelajarNextJsBackEnd.Entities.Migrations
 
             modelBuilder.Entity("BelajarNextJsBackEnd.Entities.Cart", b =>
                 {
-                    b.HasOne("BelajarNextJsBackEnd.Entities.Account", "Account")
-                        .WithMany("Carts")
-                        .HasForeignKey("AccountId")
+                    b.HasOne("BelajarNextJsBackEnd.Entities.Restaurant", "Restaurant")
+                        .WithMany()
+                        .HasForeignKey("RestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BelajarNextJsBackEnd.Entities.Product", "Product")
-                        .WithMany("Carts")
-                        .HasForeignKey("ProductId")
+                    b.HasOne("BelajarNextJsBackEnd.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Account");
+                    b.Navigation("Restaurant");
 
-                    b.Navigation("Product");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.City", b =>
+            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.CartDetail", b =>
                 {
-                    b.HasOne("BelajarNextJsBackEnd.Entities.Province", "Province")
-                        .WithMany("Cities")
-                        .HasForeignKey("ProvinceId")
+                    b.HasOne("BelajarNextJsBackEnd.Entities.Cart", "Cart")
+                        .WithMany("CartDetails")
+                        .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Province");
+                    b.HasOne("BelajarNextJsBackEnd.Entities.FoodItem", "FoodItem")
+                        .WithMany()
+                        .HasForeignKey("FoodItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cart");
+
+                    b.Navigation("FoodItem");
                 });
 
-            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.Product", b =>
+            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.FoodItem", b =>
                 {
-                    b.HasOne("BelajarNextJsBackEnd.Entities.Brand", "Brand")
-                        .WithMany("Products")
-                        .HasForeignKey("BrandId")
+                    b.HasOne("BelajarNextJsBackEnd.Entities.Restaurant", "Restaurant")
+                        .WithMany("FoodItems")
+                        .HasForeignKey("RestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Brand");
+                    b.Navigation("Restaurant");
                 });
 
             modelBuilder.Entity("BelajarNextJsBackEnd.Entities.PurchaseOrder", b =>
                 {
-                    b.HasOne("BelajarNextJsBackEnd.Entities.Account", "Account")
-                        .WithMany("PurchaseOrders")
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("BelajarNextJsBackEnd.Entities.PurchaseOrderStatus", "PurchaseOrderStatus")
                         .WithMany("PurchaseOrders")
                         .HasForeignKey("PurchaseOrderStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BelajarNextJsBackEnd.Entities.ShippingInformation", "ShippingInformation")
-                        .WithMany()
-                        .HasForeignKey("ShippingInformationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("BelajarNextJsBackEnd.Entities.User", "User")
+                        .WithMany("PurchaseOrders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Account");
 
                     b.Navigation("PurchaseOrderStatus");
 
-                    b.Navigation("ShippingInformation");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BelajarNextJsBackEnd.Entities.PurchaseOrderDetail", b =>
                 {
-                    b.HasOne("BelajarNextJsBackEnd.Entities.Product", "Product")
+                    b.HasOne("BelajarNextJsBackEnd.Entities.FoodItem", "FoodItem")
                         .WithMany()
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("FoodItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -583,28 +505,9 @@ namespace BelajarNextJsBackEnd.Entities.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Product");
+                    b.Navigation("FoodItem");
 
                     b.Navigation("PurchaseOrder");
-                });
-
-            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.ShippingInformation", b =>
-                {
-                    b.HasOne("BelajarNextJsBackEnd.Entities.Account", "Account")
-                        .WithMany("ShippingInformations")
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BelajarNextJsBackEnd.Entities.City", "City")
-                        .WithMany("ShippingInformations")
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-
-                    b.Navigation("City");
                 });
 
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictEntityFrameworkCoreAuthorization", b =>
@@ -631,33 +534,9 @@ namespace BelajarNextJsBackEnd.Entities.Migrations
                     b.Navigation("Authorization");
                 });
 
-            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.Account", b =>
+            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.Cart", b =>
                 {
-                    b.Navigation("Carts");
-
-                    b.Navigation("PurchaseOrders");
-
-                    b.Navigation("ShippingInformations");
-                });
-
-            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.Brand", b =>
-                {
-                    b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.City", b =>
-                {
-                    b.Navigation("ShippingInformations");
-                });
-
-            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.Product", b =>
-                {
-                    b.Navigation("Carts");
-                });
-
-            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.Province", b =>
-                {
-                    b.Navigation("Cities");
+                    b.Navigation("CartDetails");
                 });
 
             modelBuilder.Entity("BelajarNextJsBackEnd.Entities.PurchaseOrder", b =>
@@ -666,6 +545,16 @@ namespace BelajarNextJsBackEnd.Entities.Migrations
                 });
 
             modelBuilder.Entity("BelajarNextJsBackEnd.Entities.PurchaseOrderStatus", b =>
+                {
+                    b.Navigation("PurchaseOrders");
+                });
+
+            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.Restaurant", b =>
+                {
+                    b.Navigation("FoodItems");
+                });
+
+            modelBuilder.Entity("BelajarNextJsBackEnd.Entities.User", b =>
                 {
                     b.Navigation("PurchaseOrders");
                 });

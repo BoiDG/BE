@@ -4,16 +4,15 @@
     {
         public string Id { set; get; } = "";
 
-        public string ProductId { set; get; } = "";
+        public string UserId { set; get; } = "";
 
-        public Product Product { set; get; } = null!;
+        public string RestaurantId { set; get; } = "";
 
-        public string AccountId { set; get; } = "";
+        public User User { set; get; } = null!;
 
-        public Account Account { set; get; } = null!;
+        public Restaurant Restaurant { set; get; } = null!;
 
-        public int Quantity { set; get; }
+        public List<CartDetail> CartDetails { get; set; } = new List<CartDetail>();
 
-        public DateTimeOffset CreatedAt { set; get; }
     }
 }
